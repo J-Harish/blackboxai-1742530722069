@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spike Run Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="screen active flex flex-col items-center justify-center min-h-screen p-4">
+        <h1 class="text-4xl mb-8 text-center pixel-font text-yellow-400">Spike Run</h1>
+        <div class="flex gap-4 mb-8">
+            <button id="createRoomBtn" class="btn-primary">Create Room</button>
+            <button id="joinRoomBtn" class="btn-primary">Join Room</button>
+        </div>
+        <div id="joinRoomForm" class="hidden fixed inset-0 bg-gray-900/90 flex items-center justify-center z-50">
+            <div class="bg-gray-800 p-8 rounded-lg shadow-xl max-w-md w-full">
+                <h3 class="text-xl mb-4 text-yellow-400 pixel-font text-center">Join Room</h3>
+                <div class="flex flex-col gap-4">
+                    <input type="text" id="partyCodeInput" placeholder="Enter Party Code" 
+                           class="bg-gray-700 text-white px-4 py-2 rounded-lg uppercase text-center">
+                    <div class="flex gap-2 justify-center">
+                        <button id="submitJoinBtn" class="btn-primary">Join Game</button>
+                        <button id="cancelJoinBtn" class="btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="mt-8 text-gray-400">developed by harish</p>
+    </div>
+
+    <!-- Avatar Creation Screen -->
+    <div id="avatarScreen" class="screen hidden">
+        <div class="flex flex-col items-center justify-center min-h-screen p-4">
+            <h2 class="text-2xl mb-8 pixel-font text-yellow-400">Create Your Avatar</h2>
+            <div class="flex flex-col items-center justify-center w-full max-w-2xl">
+                <div class="avatar-preview mb-8 relative">
+                    <div id="avatarPreview" class="w-32 h-32 rounded-full bg-gray-700"></div>
+                    <div id="crownPreview" class="hidden absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <i class="fas fa-crown text-yellow-400 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="avatar-controls grid grid-cols-1 gap-6 w-full max-w-md bg-gray-800 p-8 rounded-lg">
+                <div class="control-group">
+                    <label class="block text-sm mb-2">Shape</label>
+                    <div class="flex gap-2 justify-center">
+                        <button class="shape-btn" data-shape="circle">⭕</button>
+                        <button class="shape-btn" data-shape="square">⬜</button>
+                        <button class="shape-btn" data-shape="triangle">△</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="block text-sm mb-2">Color</label>
+                    <input type="color" id="avatarColor" class="w-full h-10 rounded cursor-pointer">
+                </div>
+                <div class="control-group">
+                    <label class="block text-sm mb-2">Pattern</label>
+                    <div class="flex gap-2 justify-center">
+                        <button class="pattern-btn" data-pattern="solid">Solid</button>
+                        <button class="pattern-btn" data-pattern="striped">Striped</button>
+                        <button class="pattern-btn" data-pattern="dotted">Dotted</button>
+                    </div>
+                </div>
+            </div>
+            <button id="confirmAvatarBtn" class="btn-primary mt-8">Confirm Avatar</button>
+        </div>
+    </div>
+
+    <!-- Lobby Screen -->
+    <div id="lobbyScreen" class="screen hidden">
+        <div class="flex flex-col items-center justify-center min-h-screen p-4">
+            <h2 class="text-2xl mb-4 pixel-font text-yellow-400">Game Lobby</h2>
+            <div id="partyCodeDisplay" class="mb-8 bg-gray-800 p-4 rounded-lg text-center w-full max-w-md">
+                <p class="text-sm text-gray-400 mb-1">Party Code:</p>
+                <p class="text-3xl font-bold text-yellow-400 pixel-font tracking-wider"></p>
+            </div>
+            <div class="w-full max-w-md bg-gray-800/50 p-6 rounded-lg">
+                <h3 class="text-xl mb-4 text-white font-bold">Players</h3>
+                <div id="playerListContainer" class="space-y-3"></div>
+            </div>
+            <div class="mt-8 flex flex-col gap-4 w-full max-w-md">
+                <button id="startGameBtn" class="btn-primary pixel-font" disabled>
+                    Waiting for players (1/2-8)
+                </button>
+                <button id="backToMenuBtn" class="btn-secondary">
+                    Back to Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen hidden relative">
+        <canvas id="gameCanvas"></canvas>
+        <div id="gameHUD" class="absolute top-0 left-0 w-full p-4">
+            <div class="flex justify-between items-start">
+                <div id="livesContainer" class="bg-gray-800 bg-opacity-80 rounded-lg p-2">
+                    <div id="livesDisplay" class="flex items-center gap-2">
+                        <i class="fas fa-heart text-red-500"></i>
+                        <span class="lives-count">3</span>
+                    </div>
+                </div>
+                <div id="playerStates" class="flex gap-4"></div>
+            </div>
+        </div>
+        <!-- Spike Warning Indicators -->
+        <div id="spikeWarnings" class="absolute inset-0 pointer-events-none">
+            <div id="topWarning" class="hidden absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-red-500/50 to-transparent"></div>
+            <div id="bottomWarning" class="hidden absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-red-500/50 to-transparent"></div>
+            <div id="leftWarning" class="hidden absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-red-500/50 to-transparent"></div>
+            <div id="rightWarning" class="hidden absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-red-500/50 to-transparent"></div>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="screen hidden">
+        <div class="flex flex-col items-center justify-center min-h-screen p-4">
+            <h2 class="text-4xl mb-8 pixel-font text-yellow-400">Game Over</h2>
+            <div id="winnerDisplay" class="mb-8 text-center">
+                <p class="text-2xl"></p>
+            </div>
+            <div class="flex gap-4">
+                <button id="playAgainBtn" class="btn-primary">Play Again</button>
+                <button id="backToMenuBtn" class="btn-secondary">Back to Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="js/avatar.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
