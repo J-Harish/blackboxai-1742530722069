@@ -1,0 +1,272 @@
+/* Custom Properties */
+:root {
+    --primary-color: #FCD34D;    /* Yellow-400 */
+    --secondary-color: #4B5563;  /* Gray-600 */
+    --danger-color: #EF4444;     /* Red-500 */
+    --success-color: #10B981;    /* Green-500 */
+}
+
+/* Base Styles */
+.pixel-font {
+    font-family: 'Press Start 2P', cursive;
+}
+
+/* Screen Management */
+.screen {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* Buttons */
+.btn-primary {
+    @apply bg-yellow-400 text-gray-900 px-6 py-3 rounded-lg font-bold 
+           hover:bg-yellow-500 transition-colors duration-200 
+           focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50;
+}
+
+.btn-secondary {
+    @apply bg-gray-700 text-white px-6 py-3 rounded-lg font-bold 
+           hover:bg-gray-600 transition-colors duration-200 
+           focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50;
+}
+
+.btn-primary:disabled {
+    @apply opacity-50 cursor-not-allowed hover:bg-yellow-400;
+}
+
+/* Avatar Creation */
+.avatar-preview {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    border: 4px solid var(--primary-color);
+    overflow: hidden;
+    position: relative;
+}
+
+.shape-btn, .pattern-btn {
+    @apply bg-gray-700 text-white px-4 py-2 rounded-lg 
+           hover:bg-gray-600 transition-colors duration-200;
+}
+
+.shape-btn.active, .pattern-btn.active {
+    @apply bg-yellow-400 text-gray-900;
+}
+
+/* Game Canvas */
+#gameCanvas {
+    width: 100%;
+    height: 100%;
+    background: #1F2937;  /* Gray-800 */
+}
+
+/* Player States and Effects */
+.player-avatar {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Crown Effect (3 lives) */
+.crown-effect {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--primary-color);
+    animation: float 2s ease-in-out infinite;
+}
+
+/* Normal State (2 lives) */
+.normal-state {
+    /* Default state, no special effects */
+}
+
+/* Nervous State (1 life) */
+.nervous-state {
+    animation: shake 0.5s ease-in-out infinite;
+}
+
+/* Sweat Effect */
+.sweat-drop {
+    position: absolute;
+    background: #60A5FA;  /* Blue-400 */
+    width: 4px;
+    height: 8px;
+    border-radius: 50%;
+    animation: sweat 1s ease-in-out infinite;
+}
+
+/* Lives Display */
+.lives-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(31, 41, 55, 0.9);  /* Gray-800 with opacity */
+    border-radius: 12px;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+}
+
+.life-icon {
+    color: var(--danger-color);
+    font-size: 1.2em;
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+@keyframes sweat {
+    0% { 
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% { 
+        transform: translateY(20px) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* Player List in Lobby */
+.player-list-item {
+    @apply flex items-center gap-3 bg-gray-800 p-3 rounded-lg;
+}
+
+.player-avatar-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Game HUD */
+#gameHUD {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 16px;
+    pointer-events: none;
+}
+
+.hud-element {
+    @apply bg-gray-800 bg-opacity-80 rounded-lg p-3;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .btn-primary, .btn-secondary {
+        @apply px-4 py-2 text-sm;
+    }
+
+    .avatar-preview {
+        width: 96px;
+        height: 96px;
+    }
+
+    .lives-display {
+        padding: 4px 8px;
+        font-size: 0.9em;
+    }
+}
+
+/* Game Over Screen */
+#gameOverScreen {
+    background: rgba(17, 24, 39, 0.95);  /* Gray-900 with opacity */
+}
+
+.winner-display {
+    @apply text-4xl text-yellow-400 mb-8 text-center pixel-font;
+}
+
+/* Party Code Display */
+#partyCodeDisplay {
+    @apply bg-gray-800 px-6 py-3 rounded-lg text-center;
+}
+
+#partyCodeDisplay p:last-child {
+    @apply text-yellow-400 text-2xl font-mono mt-2;
+}
+
+/* Loading and Transitions */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Warning Animations */
+@keyframes pulseWarning {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+    100% { opacity: 0.3; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease-out forwards;
+}
+
+#spikeWarnings > div {
+    animation: pulseWarning 1s infinite;
+    transition: opacity 0.3s ease;
+}
+
+/* Spike Animation */
+.spike {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: var(--danger-color);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    transition: transform 0.3s ease;
+}
+
+.spike.up { transform: rotate(0deg); }
+.spike.down { transform: rotate(180deg); }
+.spike.left { transform: rotate(90deg); }
+.spike.right { transform: rotate(-90deg); }
+
+/* Central Box Obstacle */
+.obstacle {
+    position: absolute;
+    background: var(--secondary-color);
+    border: 4px solid var(--primary-color);
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(252, 211, 77, 0.3);
+}
